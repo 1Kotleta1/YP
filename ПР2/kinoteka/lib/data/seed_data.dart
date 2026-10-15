@@ -1,0 +1,96 @@
+import '../models/director.dart';
+import '../models/movie.dart';
+import '../models/reference.dart';
+
+/// Начальный набор данных. При перезагрузке страницы всё
+/// восстанавливается отсюда: хранилище пока только в памяти.
+
+const seedGenres = <Genre>[
+  Genre(id: 1, name: 'Драма'),
+  Genre(id: 2, name: 'Фантастика'),
+  Genre(id: 3, name: 'Триллер'),
+  Genre(id: 4, name: 'Комедия'),
+  Genre(id: 5, name: 'Анимация'),
+  Genre(id: 6, name: 'Криминал'),
+  Genre(id: 7, name: 'Приключения'),
+  Genre(id: 8, name: 'Боевик'),
+  Genre(id: 9, name: 'Детектив'),
+  Genre(id: 10, name: 'Мелодрама'),
+];
+
+const seedStudios = <Studio>[
+  Studio(id: 1, name: 'Warner Bros.', country: 'США'),
+  Studio(id: 2, name: 'Universal Pictures', country: 'США'),
+  Studio(id: 3, name: 'Мосфильм', country: 'Россия'),
+  Studio(id: 4, name: 'Studio Ghibli', country: 'Япония'),
+  Studio(id: 5, name: 'Paramount Pictures', country: 'США'),
+  Studio(id: 6, name: '20th Century Studios', country: 'США'),
+  Studio(id: 7, name: 'Legendary Pictures', country: 'США'),
+  Studio(id: 8, name: 'Non-Stop Production', country: 'Россия'),
+  Studio(id: 9, name: 'CJ Entertainment', country: 'Южная Корея'),
+  Studio(id: 10, name: 'Miramax', country: 'США'),
+  Studio(id: 11, name: 'СТВ', country: 'Россия'),
+  Studio(id: 12, name: 'Columbia Pictures', country: 'США'),
+];
+
+const seedDirectors = <Director>[
+  Director(id: 1, lastName: 'Нолан', firstName: 'Кристофер', country: 'Великобритания', birthYear: 1970),
+  Director(id: 2, lastName: 'Тарковский', firstName: 'Андрей', country: 'Россия', birthYear: 1932),
+  Director(id: 3, lastName: 'Спилберг', firstName: 'Стивен', country: 'США', birthYear: 1946),
+  Director(id: 4, lastName: 'Миядзаки', firstName: 'Хаяо', country: 'Япония', birthYear: 1941),
+  Director(id: 5, lastName: 'Скорсезе', firstName: 'Мартин', country: 'США', birthYear: 1942),
+  Director(id: 6, lastName: 'Финчер', firstName: 'Дэвид', country: 'США', birthYear: 1962),
+  Director(id: 7, lastName: 'Вильнёв', firstName: 'Дени', country: 'Канада', birthYear: 1967),
+  Director(id: 8, lastName: 'Звягинцев', firstName: 'Андрей', country: 'Россия', birthYear: 1964),
+  Director(id: 9, lastName: 'Тарантино', firstName: 'Квентин', country: 'США', birthYear: 1963),
+  Director(id: 10, lastName: 'Пон', firstName: 'Джун-хо', country: 'Южная Корея', birthYear: 1969),
+  Director(id: 11, lastName: 'Балабанов', firstName: 'Алексей', country: 'Россия', birthYear: 1959),
+  Director(id: 12, lastName: 'Кэмерон', firstName: 'Джеймс', country: 'Канада', birthYear: 1954),
+  Director(id: 13, lastName: 'Рязанов', firstName: 'Эльдар', country: 'Россия', birthYear: 1927),
+  Director(id: 14, lastName: 'Данелия', firstName: 'Георгий', country: 'Россия', birthYear: 1930),
+];
+
+const seedMovies = <Movie>[
+  Movie(id: 1, title: 'Начало', originalTitle: 'Inception', year: 2010, duration: 148, rating: 8.7, studioId: 1, directorIds: [1], genreIds: [2, 8, 3]),
+  Movie(id: 2, title: 'Интерстеллар', originalTitle: 'Interstellar', year: 2014, duration: 169, rating: 8.6, studioId: 5, directorIds: [1], genreIds: [2, 1, 7]),
+  Movie(id: 3, title: 'Тёмный рыцарь', originalTitle: 'The Dark Knight', year: 2008, duration: 152, rating: 8.5, studioId: 1, directorIds: [1], genreIds: [8, 6, 1]),
+  Movie(id: 4, title: 'Престиж', originalTitle: 'The Prestige', year: 2006, duration: 130, rating: 8.5, studioId: 1, directorIds: [1], genreIds: [1, 3, 9]),
+  Movie(id: 5, title: 'Оппенгеймер', originalTitle: 'Oppenheimer', year: 2023, duration: 180, rating: 8.1, studioId: 2, directorIds: [1], genreIds: [1]),
+  Movie(id: 6, title: 'Солярис', originalTitle: 'Солярис', year: 1972, duration: 167, rating: 7.7, studioId: 3, directorIds: [2], genreIds: [2, 1]),
+  Movie(id: 7, title: 'Сталкер', originalTitle: 'Сталкер', year: 1979, duration: 163, rating: 8.1, studioId: 3, directorIds: [2], genreIds: [2, 1]),
+  Movie(id: 8, title: 'Зеркало', originalTitle: 'Зеркало', year: 1974, duration: 107, rating: 7.9, studioId: 3, directorIds: [2], genreIds: [1]),
+  Movie(id: 9, title: 'Список Шиндлера', originalTitle: "Schindler's List", year: 1993, duration: 195, rating: 8.8, studioId: 2, directorIds: [3], genreIds: [1]),
+  Movie(id: 10, title: 'Парк юрского периода', originalTitle: 'Jurassic Park', year: 1993, duration: 127, rating: 8.0, studioId: 2, directorIds: [3], genreIds: [2, 7]),
+  Movie(id: 11, title: 'Спасти рядового Райана', originalTitle: 'Saving Private Ryan', year: 1998, duration: 169, rating: 8.3, studioId: 5, directorIds: [3], genreIds: [1, 8]),
+  Movie(id: 12, title: 'Унесённые призраками', originalTitle: 'Sen to Chihiro no Kamikakushi', year: 2001, duration: 125, rating: 8.5, studioId: 4, directorIds: [4], genreIds: [5, 7]),
+  Movie(id: 13, title: 'Мой сосед Тоторо', originalTitle: 'Tonari no Totoro', year: 1988, duration: 86, rating: 8.3, studioId: 4, directorIds: [4], genreIds: [5, 4]),
+  Movie(id: 14, title: 'Ходячий замок', originalTitle: 'Hauru no Ugoku Shiro', year: 2004, duration: 119, rating: 8.3, studioId: 4, directorIds: [4], genreIds: [5, 7, 10]),
+  Movie(id: 15, title: 'Отступники', originalTitle: 'The Departed', year: 2006, duration: 151, rating: 8.5, studioId: 1, directorIds: [5], genreIds: [6, 3]),
+  Movie(id: 16, title: 'Остров проклятых', originalTitle: 'Shutter Island', year: 2010, duration: 138, rating: 8.5, studioId: 5, directorIds: [5], genreIds: [3, 9]),
+  Movie(id: 17, title: 'Волк с Уолл-стрит', originalTitle: 'The Wolf of Wall Street', year: 2013, duration: 180, rating: 8.0, studioId: 5, directorIds: [5], genreIds: [4, 6]),
+  Movie(id: 18, title: 'Бойцовский клуб', originalTitle: 'Fight Club', year: 1999, duration: 139, rating: 8.7, studioId: 6, directorIds: [6], genreIds: [1, 3]),
+  Movie(id: 19, title: 'Семь', originalTitle: 'Se7en', year: 1995, duration: 127, rating: 8.3, studioId: 1, directorIds: [6], genreIds: [3, 6, 9]),
+  Movie(id: 20, title: 'Исчезнувшая', originalTitle: 'Gone Girl', year: 2014, duration: 149, rating: 8.0, studioId: 6, directorIds: [6], genreIds: [3, 9]),
+  Movie(id: 21, title: 'Прибытие', originalTitle: 'Arrival', year: 2016, duration: 116, rating: 7.7, studioId: 5, directorIds: [7], genreIds: [2, 1]),
+  Movie(id: 22, title: 'Бегущий по лезвию 2049', originalTitle: 'Blade Runner 2049', year: 2017, duration: 163, rating: 7.9, studioId: 1, directorIds: [7], genreIds: [2, 1]),
+  Movie(id: 23, title: 'Дюна', originalTitle: 'Dune', year: 2021, duration: 155, rating: 7.8, studioId: 7, directorIds: [7], genreIds: [2, 7]),
+  Movie(id: 24, title: 'Левиафан', originalTitle: 'Левиафан', year: 2014, duration: 140, rating: 7.3, studioId: 8, directorIds: [8], genreIds: [1]),
+  Movie(id: 25, title: 'Елена', originalTitle: 'Елена', year: 2011, duration: 109, rating: 7.3, studioId: 8, directorIds: [8], genreIds: [1, 3]),
+  Movie(id: 26, title: 'Нелюбовь', originalTitle: 'Нелюбовь', year: 2017, duration: 127, rating: 7.1, studioId: 8, directorIds: [8], genreIds: [1]),
+  Movie(id: 27, title: 'Криминальное чтиво', originalTitle: 'Pulp Fiction', year: 1994, duration: 154, rating: 8.6, studioId: 10, directorIds: [9], genreIds: [6, 4]),
+  Movie(id: 28, title: 'Бешеные псы', originalTitle: 'Reservoir Dogs', year: 1992, duration: 99, rating: 8.2, studioId: 10, directorIds: [9], genreIds: [6, 3]),
+  Movie(id: 29, title: 'Джанго освобождённый', originalTitle: 'Django Unchained', year: 2012, duration: 165, rating: 8.2, studioId: 12, directorIds: [9], genreIds: [8, 1]),
+  Movie(id: 30, title: 'Паразиты', originalTitle: 'Gisaengchung', year: 2019, duration: 132, rating: 8.0, studioId: 9, directorIds: [10], genreIds: [1, 4, 3]),
+  Movie(id: 31, title: 'Воспоминания об убийстве', originalTitle: 'Salinui chueok', year: 2003, duration: 131, rating: 8.1, studioId: 9, directorIds: [10], genreIds: [6, 9, 1]),
+  Movie(id: 32, title: 'Брат', originalTitle: 'Брат', year: 1997, duration: 100, rating: 8.3, studioId: 11, directorIds: [11], genreIds: [6, 1, 8]),
+  Movie(id: 33, title: 'Брат 2', originalTitle: 'Брат 2', year: 2000, duration: 127, rating: 8.2, studioId: 11, directorIds: [11], genreIds: [6, 8, 4]),
+  Movie(id: 34, title: 'Аватар', originalTitle: 'Avatar', year: 2009, duration: 162, rating: 8.0, studioId: 6, directorIds: [12], genreIds: [2, 7, 8]),
+  Movie(id: 35, title: 'Титаник', originalTitle: 'Titanic', year: 1997, duration: 194, rating: 8.4, studioId: 6, directorIds: [12], genreIds: [1, 10]),
+  Movie(id: 36, title: 'Терминатор 2: Судный день', originalTitle: 'Terminator 2: Judgment Day', year: 1991, duration: 137, rating: 8.3, studioId: 12, directorIds: [12], genreIds: [2, 8]),
+  Movie(id: 37, title: 'Ирония судьбы, или С лёгким паром!', originalTitle: 'Ирония судьбы, или С лёгким паром!', year: 1975, duration: 184, rating: 8.2, studioId: 3, directorIds: [13], genreIds: [4, 10]),
+  Movie(id: 38, title: 'Служебный роман', originalTitle: 'Служебный роман', year: 1977, duration: 159, rating: 8.3, studioId: 3, directorIds: [13], genreIds: [4, 10]),
+  Movie(id: 39, title: 'Гараж', originalTitle: 'Гараж', year: 1979, duration: 95, rating: 7.9, studioId: 3, directorIds: [13], genreIds: [4]),
+  Movie(id: 40, title: 'Мимино', originalTitle: 'Мимино', year: 1977, duration: 97, rating: 8.1, studioId: 3, directorIds: [14], genreIds: [4, 1]),
+  Movie(id: 41, title: 'Кин-дза-дза!', originalTitle: 'Кин-дза-дза!', year: 1986, duration: 135, rating: 8.1, studioId: 3, directorIds: [14], genreIds: [2, 4]),
+  Movie(id: 42, title: 'Афоня', originalTitle: 'Афоня', year: 1975, duration: 92, rating: 7.9, studioId: 3, directorIds: [14], genreIds: [4, 1]),
+];
