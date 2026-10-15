@@ -1,0 +1,13 @@
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins-dependencies
+.packages
+build/
+.idea/
+*.iml
+
+# Временные файлы Word
+~$*
+
+# Примеры оформления из методички
+*ПРИМЕР*
