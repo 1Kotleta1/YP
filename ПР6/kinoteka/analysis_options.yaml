@@ -1,0 +1,14 @@
+analyzer:
+  exclude:
+    - build/**
+    - web/**
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+
+formatter:
+  # Длина строки, к которой уже приведён код проекта
+  page_width: 120

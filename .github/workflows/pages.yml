@@ -1,0 +1,78 @@
+# Автосборка и публикация «Кинотеки» (ПР6) на GitHub Pages.
+# Запускается при каждом изменении ветки main, затрагивающем ПР6,
+# и вручную из вкладки Actions.
+name: Публикация Кинотеки
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ПР6/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Новая публикация отменяет ещё не завершённую предыдущую
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ПР6/kinoteka
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.41.5
+          cache: true
+
+      - name: Зависимости
+        run: flutter pub get
+
+      - name: Анализатор и форматирование
+        run: |
+          flutter analyze
+          dart format --set-exit-if-changed lib test
+
+      - name: Тесты
+        run: flutter test
+
+      # На Pages нет сервера API: сборка работает в демонстрационном режиме,
+      # учебный сервер выполняется прямо в браузере (web/demo)
+      - name: Демонстрационный сервер
+        run: |
+          mkdir -p web/demo
+          cp ../server/api-core.js ../server/kinoteka-demo.js ../server/seed.json web/demo/
+
+      # Сайт проекта открывается по адресу /YP/, поэтому --base-href /YP/
+      - name: Сборка
+        run: flutter build web --release --base-href /YP/ --dart-define=API_BASE_URL=demo
+
+      # Pages отдаёт 404.html на любой неизвестный путь: копия index.html
+      # загружает приложение, и оно само открывает нужный экран
+      - name: Прямые ссылки
+        run: cp build/web/index.html build/web/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ПР6/kinoteka/build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Кинотека (локальный сервер)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "chrome", "--dart-define-from-file=env/local.json"]
+    },
+    {
+      "name": "Кинотека (демо без сервера)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "chrome", "--dart-define-from-file=env/demo.json"]
+    }
+  ]
+}
