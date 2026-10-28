@@ -1,0 +1,26 @@
+# Учебный сервер «Кинотеки» (ПР6/server) на Render.
+# Создаётся из этого файла: Render → New → Blueprint → репозиторий YP.
+# Опубликованное приложение на GitHub Pages обращается к нему по HTTPS.
+services:
+  - type: web
+    name: kinoteka-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    rootDir: ПР6/server
+    # Внешних зависимостей у сервера нет — собирать нечего
+    buildCommand: node --version
+    startCommand: node mock-server.js
+    healthCheckPath: /api/__health
+    autoDeploy: true
+    envVars:
+      # Запросы разрешены только со страницы на GitHub Pages
+      - key: ALLOWED_ORIGINS
+        value: https://1kotleta1.github.io
+      - key: ACCESS_TTL
+        value: "900"
+      # Постоянный ключ подписи: после пробуждения сервера токен доступа
+      # остаётся действительным. Render создаёт его сам при первом запуске
+      - key: TOKEN_SECRET
+        generateValue: true

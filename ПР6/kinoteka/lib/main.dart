@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -34,6 +36,10 @@ Future<void> main() async {
     runApp(const _NoApiAddressApp());
     return;
   }
+
+  // Бесплатный сервер на Render после простоя просыпается до минуты:
+  // будим его сразу, пока загружается приложение и вводится пароль
+  if (!isDemoApi) unawaited(healthPing()());
 
   final themeController = ThemeController(PreferencesService());
   await themeController.load();

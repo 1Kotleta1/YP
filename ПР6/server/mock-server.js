@@ -11,6 +11,11 @@
  *
  *   node mock-server.js --port 8080 --origin http://localhost:5555 --ttl 900
  *
+ * На Render (render.yaml в корне репозитория) те же параметры задаются
+ * переменными окружения: PORT, ALLOWED_ORIGINS, ACCESS_TTL, TOKEN_SECRET.
+ * Бесплатный сервер Render засыпает после 15 минут без запросов; при
+ * пробуждении данные, как и при любом перезапуске, начинаются с seed.json.
+ *
  * Описание адресов и форматов — в api/КОНТРАКТ-API.md.
  */
 'use strict';
@@ -24,23 +29,27 @@ const { createApi } = require('./api-core');
 
 // ---------------------------------------------------------------- параметры
 
-function arg(name, fallback) {
+/** Параметр командной строки, затем переменная окружения (так их задаёт Render), затем значение по умолчанию. */
+function arg(name, env, fallback) {
   const i = process.argv.indexOf(`--${name}`);
-  return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
+  if (i !== -1 && process.argv[i + 1]) return process.argv[i + 1];
+  return process.env[env] || fallback;
 }
 
-const PORT = Number(arg('port', 8080));
+const PORT = Number(arg('port', 'PORT', 8080));
 // Разрешённые источники через запятую. Сервер намеренно строгий:
 // с другого порта браузер получит ошибку CORS.
-const ORIGINS = arg('origin', 'http://localhost:5555').split(',').map((s) => s.trim());
-const SEED = arg('seed', path.join(__dirname, 'seed.json'));
+const ORIGINS = arg('origin', 'ALLOWED_ORIGINS', 'http://localhost:5555').split(',').map((s) => s.trim());
+const SEED = arg('seed', 'SEED_FILE', path.join(__dirname, 'seed.json'));
 const QUIET = process.argv.includes('--quiet');
 // Срок жизни токена доступа в секундах. Для проверки обновления токена
 // сервер запускают с коротким сроком: --ttl 60.
-const ACCESS_TTL = Number(arg('ttl', 900));
+const ACCESS_TTL = Number(arg('ttl', 'ACCESS_TTL', 900));
 // Ключ подписи токенов. По умолчанию новый при каждом запуске:
 // после перезапуска сервера все выданные токены недействительны.
-const SECRET = arg('secret', crypto.randomBytes(32).toString('hex'));
+// На Render ключ задаётся постоянным (TOKEN_SECRET), чтобы после
+// пробуждения сервера токен доступа оставался действительным.
+const SECRET = arg('secret', 'TOKEN_SECRET', crypto.randomBytes(32).toString('hex'));
 
 // Криптография Node.js для api-core.js
 const nodeCrypto = {
