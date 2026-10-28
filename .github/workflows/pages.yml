@@ -47,16 +47,10 @@ jobs:
       - name: Тесты
         run: flutter test
 
-      # На Pages нет сервера API: сборка работает в демонстрационном режиме,
-      # учебный сервер выполняется прямо в браузере (web/demo)
-      - name: Демонстрационный сервер
-        run: |
-          mkdir -p web/demo
-          cp ../server/api-core.js ../server/kinoteka-demo.js ../server/seed.json web/demo/
-
-      # Сайт проекта открывается по адресу /YP/, поэтому --base-href /YP/
+      # Сайт проекта открывается по адресу /YP/, поэтому --base-href /YP/.
+      # Адрес API — учебный сервер на Render (env/pages.json, render.yaml)
       - name: Сборка
-        run: flutter build web --release --base-href /YP/ --dart-define=API_BASE_URL=demo
+        run: flutter build web --release --base-href /YP/ --dart-define-from-file=env/pages.json
 
       # Pages отдаёт 404.html на любой неизвестный путь: копия index.html
       # загружает приложение, и оно само открывает нужный экран
