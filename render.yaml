@@ -8,10 +8,11 @@ services:
     plan: free
     region: frankfurt
     branch: main
-    rootDir: ПР6/server
+    # rootDir в Render допускает только латиницу, поэтому путь
+    # к серверу указан прямо в команде запуска
     # Внешних зависимостей у сервера нет — собирать нечего
     buildCommand: node --version
-    startCommand: node mock-server.js
+    startCommand: node "ПР6/server/mock-server.js"
     healthCheckPath: /api/__health
     autoDeploy: true
     envVars:
