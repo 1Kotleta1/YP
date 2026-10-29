@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Кинотека — каталог фильмов и режиссёров">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Кинотека">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Кинотека</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Экран-заглушка на время начальной загрузки: название и индикатор вместо белого экрана -->
+  <style>
+    html, body { margin: 0; height: 100%; background: #141218; }
+    @media (prefers-color-scheme: light) { html, body { background: #fef7ff; } }
+    #splash {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 20px;
+      font-family: Roboto, "Segoe UI", Arial, sans-serif; color: #e6e0e9;
+      transition: opacity .3s ease;
+    }
+    @media (prefers-color-scheme: light) { #splash { color: #1d1b20; } }
+    #splash .logo { font-size: 56px; line-height: 1; }
+    #splash h1 { margin: 0; font-size: 28px; font-weight: 500; letter-spacing: .5px; }
+    #splash p { margin: 0; font-size: 14px; opacity: .7; }
+    #splash .bar { width: 220px; height: 4px; border-radius: 2px; background: rgba(208, 188, 255, .25); overflow: hidden; }
+    #splash .bar::after {
+      content: ""; display: block; width: 40%; height: 100%; border-radius: 2px; background: #d0bcff;
+      animation: splash-move 1.1s ease-in-out infinite;
+    }
+    @media (prefers-color-scheme: light) { #splash .bar::after { background: #6750a4; } }
+    @keyframes splash-move { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+    #splash.hidden { opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div id="splash" role="progressbar" aria-label="Загрузка приложения «Кинотека»">
+    <div class="logo" aria-hidden="true">🎬</div>
+    <h1>Кинотека</h1>
+    <div class="bar"></div>
+    <p>Загрузка приложения…</p>
+  </div>
+  <noscript>Для работы «Кинотеки» нужно включить JavaScript.</noscript>
+  <script>
+    // Заглушка убирается, когда Flutter нарисовал первый кадр
+    window.addEventListener('flutter-first-frame', function () {
+      var s = document.getElementById('splash');
+      s.classList.add('hidden');
+      setTimeout(function () { s.remove(); }, 400);
+    });
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

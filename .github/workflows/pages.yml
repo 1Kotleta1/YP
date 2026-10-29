@@ -1,5 +1,5 @@
-# Автосборка и публикация «Кинотеки» (ПР6) на GitHub Pages.
-# Запускается при каждом изменении ветки main, затрагивающем ПР6,
+# Автосборка и публикация «Кинотеки» (итоговая работа) на GitHub Pages.
+# Запускается при каждом изменении ветки main, затрагивающем Итоговая,
 # и вручную из вкладки Actions.
 name: Публикация Кинотеки
 
@@ -7,7 +7,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'ПР6/**'
+      - 'Итоговая/kinoteka/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ПР6/kinoteka
+        working-directory: Итоговая/kinoteka
     steps:
       - uses: actions/checkout@v4
 
@@ -48,9 +48,9 @@ jobs:
         run: flutter test
 
       # Сайт проекта открывается по адресу /YP/, поэтому --base-href /YP/.
-      # Адрес API — учебный сервер на Render (env/pages.json, render.yaml)
+      # Данные — в проекте Supabase: адрес и публичный ключ в env/supabase.json
       - name: Сборка
-        run: flutter build web --release --base-href /YP/ --dart-define-from-file=env/pages.json
+        run: flutter build web --release --base-href /YP/ --dart-define-from-file=env/supabase.json
 
       # Pages отдаёт 404.html на любой неизвестный путь: копия index.html
       # загружает приложение, и оно само открывает нужный экран
@@ -59,7 +59,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ПР6/kinoteka/build/web
+          path: Итоговая/kinoteka/build/web
 
   deploy:
     needs: build

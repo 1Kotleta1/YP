@@ -1,7 +1,7 @@
 # Учебная практика УП.04.01 «Внедрение и поддержка программного обеспечения»
 
 **Студент:** Шарапов Георгий Николаевич, группа П-3-23
-**Стек:** Flutter Web, Dart, go_router, provider, shared_preferences, Dio; учебный сервер — Node.js
+**Стек:** Flutter Web, Dart, go_router, provider, shared_preferences, Dio; учебный сервер — Node.js; итоговая работа — Supabase (PostgreSQL, PostgREST, Supabase Auth)
 
 | Работа | Тема | Папка |
 |---|---|---|
@@ -11,6 +11,7 @@
 | ПР4 | Подключение REST API («Кинотека») | [`ПР4/kinoteka`](ПР4/kinoteka), [`ПР4/server`](ПР4/server) |
 | ПР5 | Аутентификация, роли и защита маршрутов («Кинотека») | [`ПР5/kinoteka`](ПР5/kinoteka), [`ПР5/server`](ПР5/server) |
 | ПР6 | Адаптивная вёрстка, сборка, публикация и тестирование («Кинотека») | [`ПР6/kinoteka`](ПР6/kinoteka), [`ПР6/server`](ПР6/server) |
+| Итоговая | Серверная часть на Supabase: база данных, правила доступа и REST API («Кинотека») | [`Итоговая/kinoteka`](Итоговая/kinoteka), [`Итоговая/supabase`](Итоговая/supabase) |
 
 Общий отчёт по всем работам: [`Практические работы УП.docx`](Практические%20работы%20УП.docx)
 
@@ -302,8 +303,10 @@ flutter run -d edge --web-port=5555
 ### Цель
 Довести приложение до состояния, в котором его можно показать: интерфейс работает при любой ширине окна, релизная сборка опубликована, код покрыт тестами. Проект продолжает ПР5.
 
-**Опубликованное приложение:** https://1kotleta1.github.io/YP/ (демонстрационный режим, вход `admin / Admin#2026`).
+**Опубликованное приложение:** https://1kotleta1.github.io/YP/ (вход `admin / Admin#2026`). Сейчас по этому адресу опубликована итоговая версия с базой Supabase; версия ПР6 с сервером на Render собирается той же командой из `ПР6/kinoteka` (см. «Запуск»).
 Публикацию выполняет GitHub Actions (`.github/workflows/pages.yml`); в настройках репозитория один раз выбирается **Settings → Pages → Source: GitHub Actions**.
+
+**Сервер API:** https://kinoteka-api.onrender.com/api — учебный сервер `ПР6/server/mock-server.js` на бесплатном тарифе Render, описан в [`render.yaml`](render.yaml) и создаётся через **Render → New → Blueprint**. Данные общие для всех, кто открывает сайт, и хранятся в памяти сервера: после 15 минут без запросов Render усыпляет сервер, и при пробуждении данные начинаются заново с `seed.json`. Первый запрос после сна ждёт до минуты — приложение будит сервер сразу при загрузке страницы, а если связь не успела появиться, показывает баннер «Нет связи с сервером» и само перезагружает данные, когда сервер ответит.
 
 ![Список фильмов при ширине 360 и 1280 px](ПР6/screenshots/f_movies.png)
 
@@ -328,7 +331,8 @@ flutter run -d edge --web-port=5555
 | `lib/core/config.dart`, `env/*.json` | адрес API только из параметра сборки (`--dart-define`) |
 | `web/index.html` | экран-заглушка на время загрузки |
 | `server/api-core.js`, `server/kinoteka-demo.js` | учебный сервер, который в демонстрационной сборке работает прямо в браузере |
-| `.github/workflows/pages.yml` | автосборка и публикация на GitHub Pages |
+| `server/mock-server.js`, `render.yaml` | учебный сервер на Render: порт, разрешённый источник и ключ подписи токенов из переменных окружения |
+| `.github/workflows/pages.yml`, `env/pages.json` | автосборка и публикация на GitHub Pages с адресом сервера на Render |
 
 ### На оценку «3»
 - Все экраны проверены при ширине 360, 768, 1280 и 1920 px: переполнений нет, консоль чистая.
@@ -377,11 +381,74 @@ flutter run -d edge --web-port=5555 --dart-define-from-file=env/local.json
 ```
 Без сервера, в демонстрационном режиме: `--dart-define-from-file=env/demo.json` (перед этим скопировать `ПР6/server/api-core.js`, `kinoteka-demo.js` и `seed.json` в `web/demo`).
 
-Релизная сборка для GitHub Pages:
+Релизная сборка для GitHub Pages (сервер на Render):
 ```bash
-flutter build web --release --base-href /YP/ --dart-define=API_BASE_URL=demo
+flutter build web --release --base-href /YP/ --dart-define-from-file=env/pages.json
 cp build/web/index.html build/web/404.html
 ```
 
 ### Отчёт
 [`ПР6/Отчет ПР6.docx`](ПР6/Отчет%20ПР6.docx)
+
+---
+
+## Итоговая работа. Серверная часть на Supabase — «Кинотека»
+
+### Цель
+Перенести данные из памяти учебного сервера в настоящую базу данных. Серверная часть сделана на Supabase: схема базы, права ролей и проверки данных описаны SQL-скриптом, REST API строит PostgREST, вход и регистрацию выполняет Supabase Auth. Своего серверного кода нет. Клиент — проект ПР6, переведённый на API Supabase.
+
+**Опубликованное приложение:** https://1kotleta1.github.io/YP/ (вход `admin / Admin#2026`), данные — в проекте Supabase `https://wktohawftoqxqdgxgqha.supabase.co`.
+
+![Список фильмов из Supabase](Итоговая/screenshots/a03_movies.png)
+
+### База данных
+| Файл | Что в нём |
+|---|---|
+| [`Итоговая/supabase/schema.sql`](Итоговая/supabase/schema.sql) | 13 таблиц, 2 представления, 31 функция, 13 триггеров, 20 правил RLS, права ролей `anon` и `authenticated` |
+| [`Итоговая/supabase/seed.sql`](Итоговая/supabase/seed.sql) | 42 фильма, 14 режиссёров, 10 жанров, 12 киностудий, 14 зрителей и 5 учётных записей |
+
+- Связи: фильм → студия (многие к одному), фильм ↔ режиссёры и жанры (многие ко многим), зритель ↔ карта (один к одному), роль ↔ права (многие ко многим).
+- Права ролей проверяет база: роль берётся из `profiles` по `auth.uid()` из подписанного токена, а не из браузера.
+- Ошибки функций и триггеров приходят с кодами HTTP: `PT403` → 403 (нет права), `PT409` → 409 (связанные записи), `PT422` → 422 (ошибки по полям в `details`).
+- RLS: гость не видит ни одной таблицы, зритель — только свою запись и свою карту, корзину видит только администратор.
+- Регистрация: триггер `handle_new_user` создаёт зрителя с картой «Базовый» и профиль с ролью «зритель».
+
+### Как развернуть базу
+1. Создать проект на [supabase.com](https://supabase.com).
+2. В разделе **Authentication → Sign In / Providers** выключить **Confirm email**.
+3. В **SQL Editor** выполнить `Итоговая/supabase/schema.sql`, затем `Итоговая/supabase/seed.sql`.
+4. Записать Project URL и публикуемый ключ (**Settings → API Keys**) в `Итоговая/kinoteka/env/supabase.json`.
+
+Публикуемый ключ виден любому посетителю сайта и защищать его не нужно: доступ ограничивают правила RLS. Секретный ключ в клиент и в репозиторий не попадает.
+
+### Клиент
+| Файл | Что сделано |
+|---|---|
+| `lib/core/config.dart`, `env/supabase.json` | адрес проекта и публикуемый ключ только из параметров сборки |
+| `lib/repositories/supabase_repository.dart` | общий репозиторий поверх PostgREST: фильтры, поиск, сортировка, `Content-Range`, корзина функциями базы |
+| `lib/repositories/supabase_repositories.dart` | фильмы и зрители читаются из представлений, сохраняются функциями `save_movie` и `save_viewer` |
+| `lib/auth/auth_api.dart` | вход по логину через `login_email` и Supabase Auth, профиль из `profiles`, выход `scope=local` |
+| `lib/core/api_exceptions.dart` | ответы PostgREST и Supabase Auth приводятся к прежним исключениям 401/403/409/422 |
+| `.github/workflows/pages.yml` | публикация папки `Итоговая/kinoteka` на GitHub Pages |
+
+### Проверка
+```bash
+flutter analyze
+dart format --set-exit-if-changed lib test
+flutter test
+```
+64 теста, все проходят. Правила RLS проверены в SQL Editor запросами от имени зрителя и менеджера.
+
+### Запуск
+```bash
+cd Итоговая/kinoteka
+flutter run -d edge --web-port=5600 --dart-define-from-file=env/supabase.json
+```
+Релизная сборка для GitHub Pages:
+```bash
+flutter build web --release --base-href /YP/ --dart-define-from-file=env/supabase.json
+cp build/web/index.html build/web/404.html
+```
+
+### Отчёт
+[`Итоговая/Отчет Итоговая.docx`](Итоговая/Отчет%20Итоговая.docx)
